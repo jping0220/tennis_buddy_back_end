@@ -7,12 +7,19 @@ import os
 
 
 user_bp = Blueprint("user",__name__, url_prefix = "/users")
+def getCurrentUserId():
+    return "laura1234"
+    # once JWT Bearer authentication is hooked up
+    #return request_security_token.sub
 
 # create a user
 @user_bp.route("", methods=["POST"])
+
 def create_user():
-    response_body = request.get_json()
-    new_user = User.from_dict(response_body)
+    ''''User is able to list their information on the site'''
+    request_body = request.get_json()
+    new_user = User.from_dict(request_body)
+    # new_user.user_id = getCurrentUserId()
 
     # if "name" not in response_body or "tennis_level" not in response_body:
     #     return jsonify({"details":" Invalid data"}), 400
@@ -24,20 +31,21 @@ def create_user():
 
 
 # get all users 
-@user_bp.route("",methods=["GET"])
-def get_all_users():
-    response = []
-    all_users = User.query.all()
+# @user_bp.route("",methods=["GET"])
+# def get_all_users():
+#     response = []
+#     all_users = User.query.all()
 
-    for user in all_users:
-        response.append(user.to_dict())
+#     for user in all_users:
+#         response.append(user.to_dict())
 
-    return jsonify(response),200
+#     return jsonify(response),200
 
 
 # get one user info
-@user_bp.route("/<user_id>", methods = ["GET"])
+@user_bp.route("", methods = ["GET"])
 def get_one_user(user_id):
+    ''''User is able to see their information on the site'''
     user = validate_user(User,user_id)
     return {"user":user.to_dict()}, 200
 
