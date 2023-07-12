@@ -97,3 +97,41 @@ def validate_user(model, user_id):
     if user is None:
         abort(make_response({"msg": "User not found"}, 404))
     return user 
+
+
+
+# new BluePrint here for public
+# GET all users info 
+# GET user info by multiple filters 
+
+public_bp = Blueprint("",__name__, url_prefix = "/")
+
+# def validate_numeric_input(input):
+#     if input.isdigit():
+#         return True
+#     else:
+#         abort(make_response(
+#             {"message": f"{input} invalid"}, 400))
+
+@public_bp.route("/<zip_code>", methods=["GET"])
+def search_by_zip_code_and_tennis_level(zip_code=None):
+   
+    response = []
+
+    user_by_zipcode = User.query.filterby(zip_code=zip_code)
+    if not user_by_zipcode:
+        abort(make_response(
+            {"message": f"{zip_code} not found in {zip_code}"}, 404))
+
+    else:
+        abort(make_response(
+            {"message": f"invalid"}, 400))
+
+
+    for user in user_by_zipcode :
+        response.append(user.to_dict())
+
+    return jsonify(response), 200
+
+
+
