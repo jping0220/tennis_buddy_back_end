@@ -31,15 +31,15 @@ def create_user():
 
 
 # get all users 
-# @user_bp.route("",methods=["GET"])
-# def get_all_users():
-#     response = []
-#     all_users = User.query.all()
+@user_bp.route("",methods=["GET"])
+def get_all_users():
+    response = []
+    all_users = User.query.all()
 
-#     for user in all_users:
-#         response.append(user.to_dict())
+    for user in all_users:
+        response.append(user.to_dict())
 
-#     return jsonify(response),200
+    return jsonify(response),200
 
 
 # get one user info
@@ -103,6 +103,7 @@ def validate_user(model, user_id):
 # new BluePrint here for public
 # GET all users info 
 # GET user info by multiple filters 
+# 
 
 public_bp = Blueprint("",__name__, url_prefix = "/")
 
@@ -113,7 +114,17 @@ public_bp = Blueprint("",__name__, url_prefix = "/")
 #         abort(make_response(
 #             {"message": f"{input} invalid"}, 400))
 
-@public_bp.route("/<zip_code>", methods=["GET"])
+@public_bp.route("", methods=["GET"])
+# def get_all_users():
+#     response = []
+#     all_users = User.query.all()
+
+#     for user in all_users:
+#         response.append(user.to_dict())
+
+#     return jsonify(response),200
+
+
 def search_by_zip_code_and_tennis_level(zip_code=None):
    
     response = []
@@ -122,7 +133,6 @@ def search_by_zip_code_and_tennis_level(zip_code=None):
     if not user_by_zipcode:
         abort(make_response(
             {"message": f"{zip_code} not found in {zip_code}"}, 404))
-
     else:
         abort(make_response(
             {"message": f"invalid"}, 400))
