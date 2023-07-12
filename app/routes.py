@@ -56,22 +56,23 @@ def update_user(user_id):
     user = validate_user(User,user_id)
     request_data = request.get_json()
     
-    update_user = request_data
-    # if request_data.get("preferences"):
-    #     user.preferences = request_data["preferences"]
-    # elif request_data.get("name"):
-    #     user.name = request_data["name"]
-    # elif request_data.get("tennis_level"):
-    #     user.tennis_level = request_data["tennis_level"]
-    # elif request_data.get("zip_code"):
-    #     user.zip_code = request_data["zip_code"]
-    # elif request_data.get("email"):
-    #     user.email = request_data["email"]
+
+    # update_user = request_data
+    if request_data.get("preferences"):
+        user.preferences = request_data["preferences"]
+    if request_data.get("name"):
+        user.name = request_data["name"]
+    if request_data.get("tennis_level"):
+        user.tennis_level = request_data["tennis_level"]
+    if request_data.get("zip_code"):
+        user.zip_code = request_data["zip_code"]
+    if request_data.get("email"):
+        user.email = request_data["email"]
     
     
     db.session.commit()
-    return jsonify(update_user), 200
-    # return {"user":user.to_dict()}, 200
+ 
+    return {"user":user.to_dict()}, 200
 
 
 # delete user
