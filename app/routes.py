@@ -19,7 +19,7 @@ def create_user():
     ''''User is able to list their information on the site'''
     request_body = request.get_json()
     new_user = User.from_dict(request_body)
-    # new_user.user_id = getCurrentUserId()
+    #new_user.user_id = getCurrentUserId()
 
     # if "name" not in response_body or "tennis_level" not in response_body:
     #     return jsonify({"details":" Invalid data"}), 400
@@ -43,7 +43,7 @@ def create_user():
 
 
 # get one user info
-@user_bp.route("", methods = ["GET"])
+@user_bp.route("<user_id>", methods = ["GET"])
 def get_one_user(user_id):
     ''''User is able to see their information on the site'''
     user = validate_user(User,user_id)
@@ -55,12 +55,18 @@ def get_one_user(user_id):
 def update_user(user_id):
     user = validate_user(User,user_id)
     request_data = request.get_json()
-
-    user.name = request_data["name"]
-    user.tennis_level = request_data["tennis_level"]
-    user.zip_code = request_data["zip_code"]
-    user.email = request_data["email"]
-    user.preferences = request_data["preferences"]
+    
+    if request_data.get("preferences"):
+        user.preferences = request_data["preferences"]
+    elif request_data.get("name"):
+        user.name = request_data["name"]
+    elif request_data.get("tennis_level"):
+        user.tennis_level = request_data["tennis_level"]
+    elif request_data.get("zip_code"):
+        user.zip_code = request_data["zip_code"]
+    elif request_data.get("email"):
+        user.email = request_data["email"]
+    
 
     db.session.commit()
 
