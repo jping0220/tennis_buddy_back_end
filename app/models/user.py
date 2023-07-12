@@ -5,8 +5,8 @@ class User(db.Model):
     token = db.Column(db.String)
     name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
-    zip_code = db.Column(db.Numeric, nullable=False)
-    tennis_level = db.Column(db.Numeric)
+    zip_code = db.Column(db.Integer, nullable=False)
+    tennis_level = db.Column(db.Integer)
     preferences = db.Column(db.String(300))
 
     def to_dict(self):
@@ -26,5 +26,5 @@ class User(db.Model):
             email = user_data["email"],
             zip_code = user_data["zip_code"],
             tennis_level = user_data["tennis_level"],
-            preferences = user_data["preference"]
+            preferences = user_data["preferences"]
         )

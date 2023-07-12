@@ -5,6 +5,7 @@ from app.models.user import User
 import requests
 import os
 
+
 user_bp = Blueprint("user",__name__, url_prefix = "/users")
 
 # create a user
@@ -41,9 +42,8 @@ def get_one_user(user_id):
     return {"user":user.to_dict()}, 200
 
 
-
 # update user 
-@user_bp.route("/<user_id>", methods = ["PUT"])
+@user_bp.route("/<user_id>", methods = ["PATCH"])
 def update_user(user_id):
     user = validate_user(User,user_id)
     request_data = request.get_json()
@@ -51,8 +51,10 @@ def update_user(user_id):
     user.name = request_data["name"]
     user.tennis_level = request_data["tennis_level"]
     user.zip_code = request_data["zip_code"]
+    user.email = request_data["email"]
+    user.preferences = request_data["preferences"]
 
-    db.seesion.commit()
+    db.session.commit()
 
     return {"user":user.to_dict()}, 200
 
@@ -62,7 +64,7 @@ def update_user(user_id):
 def delete_user(user_id):
     user = validate_user(User, user_id)
 
-    db.seesion.delete(user)
+    db.session.delete(user)
     db.session.commit()
 
     return {"details": f'User {user_id} deleted successfully!'}
