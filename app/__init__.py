@@ -27,8 +27,8 @@ def create_app(test_config=None):
         
     # Import models here for Alembic setup
     # from app.models.ExampleModel import ExampleModel
-    from app.models.board import Board
-    from app.models.card import Card
+    from app.models.user import User
+    
 
     db.init_app(app)
     migrate.init_app(app, db)
@@ -36,11 +36,8 @@ def create_app(test_config=None):
     # Register Blueprints here
     # from .routes import example_bp
     # app.register_blueprint(example_bp)
-    from.routes import board_bp
-    app.register_blueprint(board_bp)
-
-    from.routes import card_bp
-    app.register_blueprint(card_bp)
+    from.routes import user_bp
+    app.register_blueprint(user_bp)
 
     CORS(app)
     return app
