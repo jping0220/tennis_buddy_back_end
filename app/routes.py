@@ -12,9 +12,9 @@ def getCurrentUserId():
     # once JWT Bearer authentication is hooked up
     #return request_security_token.sub
 
+
 # create a user
 @user_bp.route("", methods=["POST"])
-
 def create_user():
     ''''User is able to list their information on the site'''
     request_body = request.get_json()
@@ -91,7 +91,7 @@ def validate_user(model, user_id):
     try:
         user_id = int(user_id)
     except ValueError:
-        abort(make_response({"mes":"id is invalide input"}, 400))
+        abort(make_response({"msg":"id is invalide input"}, 400))
     
     user = model.query.get(user_id)
     if user is None:
