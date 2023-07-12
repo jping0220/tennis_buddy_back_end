@@ -1,7 +1,7 @@
 from app import db
 
 class User(db.Model):
-    user_id = db.Column(db.Integer, primary_key=True, antoincrement = True)
+    user_id = db.Column(db.Integer, primary_key=True, autoincrement = True)
     name = db.Column(db.String)
     tennis_level = db.Column(db.Integer)
     zip_code = db.Column(db.Integer)

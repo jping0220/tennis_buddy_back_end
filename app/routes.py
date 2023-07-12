@@ -1,20 +1,20 @@
 from flask import Blueprint, jsonify, request, make_response, abort
 from app import db
 from app.models.user import User
-from datetime import datetime 
+# from datetime import datetime 
 import requests
 import os
 
-user_bp = Blueprint("user",__name__,url_prefix = "/users")
+user_bp = Blueprint("user",__name__, url_prefix = "/users")
 
 # create a user
-@user_bp.route("",methods = ["POST"])
+@user_bp.route("", methods=["POST"])
 def create_user():
     response_body = request.get_json()
-    if "name" not in response_body or "tennis_level" not in response_body:
-        return jsonify({"details":" Invalid data"}), 400
-    
     new_user = User.from_dict(response_body)
+
+    # if "name" not in response_body or "tennis_level" not in response_body:
+    #     return jsonify({"details":" Invalid data"}), 400
 
     db.session.add(new_user)
     db.session.commit()
@@ -50,7 +50,7 @@ def get_one_user(user_id):
 
 
 # update user 
-@user_bp.route("/<user_id", methods = ["PUT"])
+@user_bp.route("/<user_id>", methods = ["PUT"])
 def update_user(user_id):
     user = validate_user(User,user_id)
     request_data = request.get_json()
