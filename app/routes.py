@@ -21,13 +21,6 @@ def create_user():
 
     return {"user":new_user.to_dict()}, 201
 
-    # return jsonify({"user":
-    #                {"id":new_user.user_id,
-    #                 "name":new_user.name,
-    #                 "tennis_level":new_user.tennis_level,
-    #                 "zip_code":new_user.zip_code
-    #                 }}), 201
-
 
 # get all users 
 @user_bp.route("",methods=["GET"])
@@ -62,13 +55,6 @@ def update_user(user_id):
     db.seesion.commit()
 
     return {"user":user.to_dict()}, 200
-
-    # return jsonify({"user":{
-    #                 "id":user.user_id,
-    #                 "name":user.name,
-    #                 "tennis_level":user.tennis_level,
-    #                 "zip_code":user.zip_code
-    # }}), 200
 
 
 # delete user

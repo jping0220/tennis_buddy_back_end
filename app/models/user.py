@@ -2,21 +2,29 @@ from app import db
 
 class User(db.Model):
     user_id = db.Column(db.Integer, primary_key=True, autoincrement = True)
-    name = db.Column(db.String)
-    tennis_level = db.Column(db.Integer)
-    zip_code = db.Column(db.Integer)
+    token = db.Column(db.String)
+    name = db.Column(db.String, nullable=False)
+    email = db.Column(db.String, nullable=False)
+    zip_code = db.Column(db.Numeric, nullable=False)
+    tennis_level = db.Column(db.Numeric)
+    preferences = db.Column(db.String(300))
 
     def to_dict(self):
         return {
                 "id":self.user_id,
                 "name":self.name,
+                "email":self.email,
+                "zip_code":self.zip_code,
                 "tennis_level":self.tennis_level,
-                "zip_code":self.zip_code
+                "preferences":self.preferences
+                
                 }
     @classmethod
     def from_dict(cls,user_data):
         return cls(
             name = user_data["name"],
+            email = user_data["email"],
+            zip_code = user_data["zip_code"],
             tennis_level = user_data["tennis_level"],
-            zip_code = user_data["zip_code"]
+            preferences = user_data["preference"]
         )
