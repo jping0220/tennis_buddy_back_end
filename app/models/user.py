@@ -6,7 +6,7 @@ class User(db.Model):
     name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     zip_code = db.Column(db.Integer, nullable=False)
-    tennis_level = db.Column(db.Integer)
+    tennis_level = db.Column(db.Float)
     preferences = db.Column(db.String(300))
 
     def to_dict(self):
