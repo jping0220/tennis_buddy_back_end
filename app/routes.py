@@ -21,11 +21,12 @@ def create_user():
     new_user = User.from_dict(request_body)
     #new_user.user_id = getCurrentUserId()
 
-    # if "name" not in response_body or "tennis_level" not in response_body:
-    #     return jsonify({"details":" Invalid data"}), 400
+    # print(new_user.tennis_level)
 
     db.session.add(new_user)
     db.session.commit()
+
+    # print({"user":new_user.to_dict()})
 
     return {"user":new_user.to_dict()}, 201
 
