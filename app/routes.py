@@ -108,15 +108,27 @@ def validate_user(model, user_id):
 public_bp = Blueprint("",__name__, url_prefix = "/")
 
 
+def validate_numeric_input(input):
+    if input.isdigit():
+        return True
+    else:
+        abort(make_response(
+            {"message": f"{input} invalid"}, 400))
+
+
 @public_bp.route("", methods=["GET"])
 def search_by_zip_code_and_tennis_level():
     response = []
-
     args = request.args
+    if not args:
+        abort(make_response(
+                    {"message": f"invalid params"}, 400))
     argsdict = {}
     for k, v in args.items():
-        argsdict[k] = v
+        if validate_numeric_input(v):
+            argsdict[k] = v
     query = User.query.filter_by(**argsdict)
+
     for user in query:
         response.append(user.to_dict())
     return jsonify(response), 200
