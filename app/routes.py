@@ -119,7 +119,9 @@ def get_all_users():
     return jsonify(response),200
 
 
-# http://127.0.0.1:5000/search?zip_code=98022 postman 
+
+# http://127.0.0.1:5000/search?zip_code=98022      try this in postman with your database
+# http://127.0.0.1:5000/search?tennis_level=4.0    try this in postman with your database
 @public_bp.route("/search", methods=["GET"])
 def search_by_zip_code_and_tennis_level():
 
