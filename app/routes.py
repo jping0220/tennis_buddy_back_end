@@ -124,17 +124,37 @@ def get_all_users():
 def search_by_zip_code_and_tennis_level():
 
     zip_code = request.args.get("zip_code")
-    print(zip_code)
+    tennis_level = request.args.get("tennis_level")
+    # print(tennis_level)
    
     response = []
 
-    user_by_zipcode = User.query.filter_by(zip_code=zip_code).all()
-    if not user_by_zipcode:
-        abort(make_response(
-            {"message": f"{zip_code} not found in {zip_code}"}, 404))
+    # user_by_zipcode = User.query.filter_by(zip_code=zip_code).all()
+    # if not user_by_zipcode:
+    #     abort(make_response(
+    #         {"message": f"{zip_code} not found in {zip_code}"}, 404))
+    # for user in user_by_zipcode :
+    #     response.append(user.to_dict())
 
-    for user in user_by_zipcode :
-        response.append(user.to_dict())
+
+    if zip_code:
+        users = User.query.filter_by(zip_code=zip_code).all()
+        if not users:
+            abort(make_response({"message": f"No users found with zip code {zip_code}"}, 404))
+        for user in users:
+            response.append(user.to_dict())
+
+    if tennis_level:
+        tennis_level = float(tennis_level)
+        users = User.query.filter_by(tennis_level=tennis_level).all()
+        if not users:
+            abort(make_response({"message": f"No users found with tennis level {tennis_level}"}, 404))
+        for user in users:
+            response.append(user.to_dict())
+
+    if not response:
+        abort(make_response({"message": "No users found"}, 404))
+
 
     return jsonify(response), 200
 
