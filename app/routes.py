@@ -119,10 +119,11 @@ def validate_numeric_input(input):
 
 @public_bp.route("", methods=["GET"])
 def search_by_zip_code_and_tennis_level():
-    closest_zip_codes = [98008]
+    session = db.session
+    closest_zip_codes = [98008, 98074]
     tennis_level = 3
     response = []
-    session = db.session
+    
     result = session.query(TennisUser).filter(TennisUser.zip_code.in_(
         closest_zip_codes)).filter(TennisUser.tennis_level == tennis_level)
     
@@ -131,8 +132,7 @@ def search_by_zip_code_and_tennis_level():
 
     return jsonify(response), 200
 
-    # result = session.query(TennisUser).filter(TennisUser.zip_code.in_(
-    #     closest_zip_codes), TennisUser.tennis_level.like(tennis_level))
+    
     # if not args:
     #     abort(make_response(
     #                 {"message": f"invalid params"}, 400))
