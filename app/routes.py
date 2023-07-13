@@ -27,6 +27,8 @@ def create_user():
     db.session.add(new_user)
     db.session.commit()
 
+    print({"user":new_user.to_dict()})
+
     return {"user":new_user.to_dict()}, 201
 
 
@@ -115,27 +117,27 @@ public_bp = Blueprint("",__name__, url_prefix = "/")
 #             {"message": f"{input} invalid"}, 400))
 
 @public_bp.route("", methods=["GET"])
-# def get_all_users():
-#     response = []
-#     all_users = User.query.all()
+def get_all_users():
+    response = []
+    all_users = User.query.all()
 
-#     for user in all_users:
-#         response.append(user.to_dict())
+    for user in all_users:
+        response.append(user.to_dict())
 
-#     return jsonify(response),200
+    return jsonify(response),200
 
+@public_bp.route("/search", methods=["GET"])
+def search_by_zip_code_and_tennis_level():
 
-def search_by_zip_code_and_tennis_level(zip_code=None):
+    zip_code = request.args.get("zip_code")
+    print(zip_code)
    
     response = []
 
-    user_by_zipcode = User.query.filterby(zip_code=zip_code)
+    user_by_zipcode = User.query.filter_by(zip_code=zip_code).all()
     if not user_by_zipcode:
         abort(make_response(
             {"message": f"{zip_code} not found in {zip_code}"}, 404))
-    else:
-        abort(make_response(
-            {"message": f"invalid"}, 400))
 
 
     for user in user_by_zipcode :

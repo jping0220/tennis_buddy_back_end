@@ -8,7 +8,7 @@ class User(db.Model):
     name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     zip_code = db.Column(db.Integer, nullable=False)
-    tennis_level = db.Column(db.Integer)
+    tennis_level = db.Column(db.Float)
     # tennis_level = db.Column(Numeric(precision=10, scale=2,decimal_return_scale=None))
     preferences = db.Column(db.String(300))
 
