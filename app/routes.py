@@ -109,13 +109,11 @@ public_bp = Blueprint("",__name__, url_prefix = "/")
 
 
 def validate_numeric_input(input):
-    input = float(input)
-    if input:
+    if input.isdigit():
         return True
     else:
         abort(make_response(
             {"message": f"{input} invalid"}, 400))
-
 
 
 @public_bp.route("", methods=["GET"])
@@ -135,9 +133,6 @@ def search_by_zip_code_and_tennis_level():
         response.append(user.to_dict())
     return jsonify(response), 200
     
-    
-    
-   
     # else:
     #     # user_by_zipcode = User.query.all()
     #     if not user_by_zipcode:
