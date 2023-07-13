@@ -1,12 +1,12 @@
 from flask import Blueprint, jsonify, request, make_response, abort
 from app import db
-from app.models.user import User
+from app.models.user import TennisUser
 # from datetime import datetime 
 import requests
 import os
 
 
-user_bp = Blueprint("user",__name__, url_prefix = "/users")
+user_bp = Blueprint("tennis_user",__name__, url_prefix = "/users")
 def getCurrentUserId():
     return "laura1234"
     # once JWT Bearer authentication is hooked up
@@ -18,10 +18,10 @@ def getCurrentUserId():
 def create_user():
     ''''User is able to list their information on the site'''
     request_body = request.get_json()
-    new_user = User.from_dict(request_body)
+    new_user = TennisUser.from_dict(request_body)
     #new_user.user_id = getCurrentUserId()
 
-    # print(new_user.tennis_level)
+    print(new_user.tennis_level)
 
     db.session.add(new_user)
     db.session.commit()
@@ -35,7 +35,7 @@ def create_user():
 @user_bp.route("",methods=["GET"])
 def get_all_users():
     response = []
-    all_users = User.query.all()
+    all_users = TennisUser.query.all()
 
     for user in all_users:
         response.append(user.to_dict())
@@ -47,14 +47,14 @@ def get_all_users():
 @user_bp.route("<user_id>", methods = ["GET"])
 def get_one_user(user_id):
     ''''User is able to see their information on the site'''
-    user = validate_user(User,user_id)
+    user = validate_user(TennisUser,user_id)
     return {"user":user.to_dict()}, 200
 
 
 # update user 
 @user_bp.route("/<user_id>", methods = ["PATCH"])
 def update_user(user_id):
-    user = validate_user(User,user_id)
+    user = validate_user(TennisUser,user_id)
     request_data = request.get_json()
 
     # update_user = request_data
@@ -78,7 +78,7 @@ def update_user(user_id):
 # delete user
 @user_bp.route("/<user_id>", methods = ["DELETE"])
 def delete_user(user_id):
-    user = validate_user(User, user_id)
+    user = validate_user(TennisUser, user_id)
 
     db.session.delete(user)
     db.session.commit()
@@ -127,7 +127,7 @@ def search_by_zip_code_and_tennis_level():
     for k, v in args.items():
         if validate_numeric_input(v):
             argsdict[k] = v
-    query = User.query.filter_by(**argsdict)
+    query = TennisUser.query.filter_by(**argsdict)
 
     for user in query:
         response.append(user.to_dict())

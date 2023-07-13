@@ -27,7 +27,7 @@ def create_app(test_config=None):
         
     # Import models here for Alembic setup
     # from app.models.ExampleModel import ExampleModel
-    from app.models.user import User
+    from app.models.user import TennisUser
     
 
     db.init_app(app)

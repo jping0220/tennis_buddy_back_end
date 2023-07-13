@@ -2,7 +2,7 @@ from app import db
 # from sqlalchemy import Numeric
 # from decimal import Decimal
 
-class User(db.Model):
+class TennisUser(db.Model):
     user_id = db.Column(db.Integer, primary_key=True, autoincrement = True)
     token = db.Column(db.String)
     name = db.Column(db.String, nullable=False)
