@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request, make_response, abort
 from app import db
 from app.models.user import TennisUser
 # from datetime import datetime 
+from zip_api import get_list_of_zip_codes
 import requests
 import os
 
@@ -120,8 +121,19 @@ def validate_numeric_input(input):
 @public_bp.route("", methods=["GET"])
 def search_by_zip_code_and_tennis_level():
     session = db.session
-    closest_zip_codes = [98008, 98074]
+    
     tennis_level = 3
+    #taking params:
+    args = request.args
+    if not args:
+        abort(make_response(
+                    {"message": f"invalid params"}, 400))
+    
+    for k, v in args.items():
+        if k == "zip_code":
+            #calling the API to populate the closest_zip_codes list:
+            closest_zip_codes = get_list_of_zip_codes(k)
+
     response = []
     
     result = session.query(TennisUser).filter(TennisUser.zip_code.in_(
