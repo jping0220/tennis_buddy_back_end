@@ -55,7 +55,6 @@ def get_one_user(user_id):
 def update_user(user_id):
     user = validate_user(User,user_id)
     request_data = request.get_json()
-    
 
     # update_user = request_data
     if request_data.get("preferences"):
@@ -107,41 +106,35 @@ def validate_user(model, user_id):
 
 public_bp = Blueprint("",__name__, url_prefix = "/")
 
-# def validate_numeric_input(input):
-#     if input.isdigit():
-#         return True
-#     else:
-#         abort(make_response(
-#             {"message": f"{input} invalid"}, 400))
 
 @public_bp.route("", methods=["GET"])
-# def get_all_users():
-#     response = []
-#     all_users = User.query.all()
-
-#     for user in all_users:
-#         response.append(user.to_dict())
-
-#     return jsonify(response),200
-
-
-def search_by_zip_code_and_tennis_level(zip_code=None):
-   
+def search_by_zip_code_and_tennis_level():
     response = []
 
-    user_by_zipcode = User.query.filterby(zip_code=zip_code)
-    if not user_by_zipcode:
-        abort(make_response(
-            {"message": f"{zip_code} not found in {zip_code}"}, 404))
-    else:
-        abort(make_response(
-            {"message": f"invalid"}, 400))
-
-
-    for user in user_by_zipcode :
+    args = request.args
+    argsdict = {}
+    for k, v in args.items():
+        argsdict[k] = v
+    query = User.query.filter_by(**argsdict)
+    for user in query:
         response.append(user.to_dict())
-
     return jsonify(response), 200
+    
+    
+    
+   
+    # else:
+    #     # user_by_zipcode = User.query.all()
+    #     if not user_by_zipcode:
+    #         abort(make_response(
+    #             {"message": f"{zip} not found in"}, 404))
+    # else:
+    #     abort(make_response(
+    #         {"message": f"invalid"}, 400))
 
+    # for user in user_by_zipcode:
+    #     response.append(user.to_dict())
+
+    # return jsonify(response), 200
 
 
