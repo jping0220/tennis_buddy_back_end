@@ -109,13 +109,6 @@ def validate_user(model, user_id):
 
 public_bp = Blueprint("",__name__, url_prefix = "/")
 
-# def validate_numeric_input(input):
-#     if input.isdigit():
-#         return True
-#     else:
-#         abort(make_response(
-#             {"message": f"{input} invalid"}, 400))
-
 @public_bp.route("", methods=["GET"])
 def get_all_users():
     response = []
@@ -126,6 +119,8 @@ def get_all_users():
 
     return jsonify(response),200
 
+
+# http://127.0.0.1:5000/search?zip_code=98022 postman 
 @public_bp.route("/search", methods=["GET"])
 def search_by_zip_code_and_tennis_level():
 
@@ -138,7 +133,6 @@ def search_by_zip_code_and_tennis_level():
     if not user_by_zipcode:
         abort(make_response(
             {"message": f"{zip_code} not found in {zip_code}"}, 404))
-
 
     for user in user_by_zipcode :
         response.append(user.to_dict())
