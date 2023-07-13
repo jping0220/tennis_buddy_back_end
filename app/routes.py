@@ -109,7 +109,8 @@ public_bp = Blueprint("",__name__, url_prefix = "/")
 
 
 def validate_numeric_input(input):
-    if input.isdigit():
+    input = float(input)
+    if input:
         return True
     else:
         abort(make_response(
@@ -118,33 +119,53 @@ def validate_numeric_input(input):
 
 @public_bp.route("", methods=["GET"])
 def search_by_zip_code_and_tennis_level():
+    closest_zip_codes = [98027, 98075]
     response = []
-    args = request.args
-    if not args:
-        abort(make_response(
-                    {"message": f"invalid params"}, 400))
-    argsdict = {}
-    for k, v in args.items():
-        if validate_numeric_input(v):
-            argsdict[k] = v
-    query = TennisUser.query.filter_by(**argsdict)
+    session = db.session
+    result = session.query(TennisUser).filter(TennisUser.zip_code.in_(closest_zip_codes))
+    print(result)
+    for row in result:
+        response.append(row.to_dict())
 
-    for user in query:
-        response.append(user.to_dict())
     return jsonify(response), 200
-    
-    # else:
-    #     # user_by_zipcode = User.query.all()
-    #     if not user_by_zipcode:
-    #         abort(make_response(
-    #             {"message": f"{zip} not found in"}, 404))
-    # else:
+
+    # result = session.query(TennisUser).filter(TennisUser.zip_code.in_(
+    #     closest_zip_codes), TennisUser.tennis_level.like(tennis_level))
+    # if not args:
     #     abort(make_response(
-    #         {"message": f"invalid"}, 400))
+    #                 {"message": f"invalid params"}, 400))
+    # argsdict = {}
+    # for k, v in args.items():
+    #     if validate_numeric_input(v):
+    #         argsdict[k] = v
+    # query = TennisUser.query.filter_by(**argsdict)
 
-    # for user in user_by_zipcode:
+    # for user in query:
     #     response.append(user.to_dict())
-
     # return jsonify(response), 200
 
 
+#-----query for list of zip codes:
+#tennis_level = 2
+#closest_zip_codes = [98029,98020]
+# response = []
+# result = session.query(TennisUser).filter(TennisUser.zip_code.in_(closest_zip_codes),TennisUser.tennis_level.like(tennis_level) )
+# for row in result:
+#     response.append(row)
+
+
+###-------------code that functions perfectly:
+# response = []
+#   args = request.args
+#    if not args:
+#         abort(make_response(
+#             {"message": f"invalid params"}, 400))
+#     argsdict = {}
+#     for k, v in args.items():
+#         if validate_numeric_input(v):
+#             argsdict[k] = v
+#     query = TennisUser.query.filter_by(**argsdict)
+
+#     for user in query:
+#         response.append(user.to_dict())
+#     return jsonify(response), 200
