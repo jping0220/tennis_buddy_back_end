@@ -119,11 +119,13 @@ def validate_numeric_input(input):
 
 @public_bp.route("", methods=["GET"])
 def search_by_zip_code_and_tennis_level():
-    closest_zip_codes = [98027, 98075]
+    closest_zip_codes = [98008]
+    tennis_level = 3
     response = []
     session = db.session
-    result = session.query(TennisUser).filter(TennisUser.zip_code.in_(closest_zip_codes))
-    print(result)
+    result = session.query(TennisUser).filter(TennisUser.zip_code.in_(
+        closest_zip_codes)).filter(TennisUser.tennis_level == tennis_level)
+    
     for row in result:
         response.append(row.to_dict())
 
