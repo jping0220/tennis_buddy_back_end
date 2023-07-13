@@ -1,6 +1,4 @@
 from app import db
-# from sqlalchemy import Numeric
-# from decimal import Decimal
 
 class TennisUser(db.Model):
     user_id = db.Column(db.Integer, primary_key=True, autoincrement = True)
@@ -9,7 +7,6 @@ class TennisUser(db.Model):
     email = db.Column(db.String, nullable=False)
     zip_code = db.Column(db.Integer, nullable=False)
     tennis_level = db.Column(db.Float)
-    # tennis_level = db.Column(Numeric(precision=10, scale=2,decimal_return_scale=None))
     preferences = db.Column(db.String(300))
 
     def to_dict(self):

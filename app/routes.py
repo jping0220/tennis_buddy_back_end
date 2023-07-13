@@ -109,11 +109,13 @@ public_bp = Blueprint("",__name__, url_prefix = "/")
 
 
 def validate_numeric_input(input):
-    if input.isdigit():
+    input = float(input)
+    if input:
         return True
     else:
         abort(make_response(
             {"message": f"{input} invalid"}, 400))
+
 
 
 @public_bp.route("", methods=["GET"])
