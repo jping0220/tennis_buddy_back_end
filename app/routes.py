@@ -1,10 +1,12 @@
 from flask import Blueprint, jsonify, request, make_response, abort
 from app import db
 from app.models.user import TennisUser
+from dotenv import load_dotenv
 # from datetime import datetime 
 import requests
 import os
 
+load_dotenv()
 
 user_bp = Blueprint("tennis_user",__name__, url_prefix = "/users")
 def getCurrentUserId():
@@ -119,7 +121,7 @@ def validate_numeric_input(input):
 
 path = "https://api.zip-codes.com/ZipCodesAPI.svc/1.0/FindZipCodesInRadius"
 
-APIKEY = "HY8RUH44ZNYLNLLM5OX6"
+ZIP_CODES_KEY = os.environ.get("ZIP_CODES_KEY")
 
 
 
@@ -130,7 +132,7 @@ def create_params(zip_code):
         "minimumradius": 0,
         "maximumradius": 20,
         "country": "ALL",
-        "key": APIKEY
+        "key": ZIP_CODES_KEY
     }
     return query_params
 
@@ -178,9 +180,10 @@ def search_by_zip_code_and_tennis_level():
             if validate_numeric_input(v):
                 tennis_level = v
         
-
+    
     result = session.query(TennisUser).filter(TennisUser.zip_code.in_(
         closest_zip_codes)).filter(TennisUser.tennis_level == tennis_level)
+    
 
     for row in result:
         response.append(row.to_dict())
@@ -188,6 +191,17 @@ def search_by_zip_code_and_tennis_level():
     return jsonify(response), 200
 
     
+#try:
+# if tennis_level != None and len(closest_zip_codes) > 0:
+#         result = session.query(TennisUser).filter(TennisUser.zip_code.in_(
+#         closest_zip_codes)).filter(TennisUser.tennis_level == tennis_level)
+#     elif tennis_level != None and closest_zip_codes == None:
+#         result = session.query(TennisUser).filter(TennisUser.zip_code.in_(
+#             closest_zip_codes)).filter(TennisUser.tennis_level == tennis_level)
+
+
+
+
     # if not args:
     #     abort(make_response(
     #                 {"message": f"invalid params"}, 400))
