@@ -123,9 +123,6 @@ path = "https://api.zip-codes.com/ZipCodesAPI.svc/1.0/FindZipCodesInRadius"
 
 ZIP_CODES_KEY = os.environ.get("ZIP_CODES_KEY")
 
-
-
-
 def create_params(zip_code):
     query_params = {
         "zipcode": zip_code,
@@ -153,14 +150,11 @@ def get_list_of_zip_codes(zip_code):
     return closest_zip_codes
 
 
-# print(get_list_of_zip_codes(zip_code))
 
 @public_bp.route("", methods=["GET"])
 def search_by_zip_code_and_tennis_level():
     response = []
     session = db.session
-    #hardcoded data for now:
-    # zip_code = 90210
     tennis_level = None
 
     #calling the API to populate the closest_zip_codes list:
@@ -179,27 +173,23 @@ def search_by_zip_code_and_tennis_level():
         elif k == "tennis_level":
             if validate_numeric_input(v):
                 tennis_level = v
-        
+    #query:
+    if tennis_level != None and len(closest_zip_codes) > 0:
+                result = session.query(TennisUser).filter(TennisUser.zip_code.in_(
+                closest_zip_codes)).filter(TennisUser.tennis_level == tennis_level)
+
+    elif tennis_level != None and closest_zip_codes == None:
+        result = session.query(TennisUser).filter(TennisUser.tennis_level == tennis_level)
     
-    result = session.query(TennisUser).filter(TennisUser.zip_code.in_(
-        closest_zip_codes)).filter(TennisUser.tennis_level == tennis_level)
+    elif tennis_level == None and len(closest_zip_codes) > 0:
+        result = session.query(TennisUser).filter(TennisUser.zip_code.in_(
+        closest_zip_codes))
     
 
     for row in result:
         response.append(row.to_dict())
 
     return jsonify(response), 200
-
-    
-#try:
-# if tennis_level != None and len(closest_zip_codes) > 0:
-#         result = session.query(TennisUser).filter(TennisUser.zip_code.in_(
-#         closest_zip_codes)).filter(TennisUser.tennis_level == tennis_level)
-#     elif tennis_level != None and closest_zip_codes == None:
-#         result = session.query(TennisUser).filter(TennisUser.zip_code.in_(
-#             closest_zip_codes)).filter(TennisUser.tennis_level == tennis_level)
-
-
 
 
     # if not args:
