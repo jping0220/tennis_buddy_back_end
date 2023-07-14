@@ -8,6 +8,10 @@ import os
 
 load_dotenv()
 
+
+#-----------------------PROTECTED ROUTES ---------------------------
+
+
 user_bp = Blueprint("tennis_user",__name__, url_prefix = "/users")
 def getCurrentUserId():
     return "laura1234"
@@ -73,7 +77,7 @@ def update_user(user_id):
     
     
     db.session.commit()
- 
+
     return {"user":user.to_dict()}, 200
 
 
@@ -102,10 +106,7 @@ def validate_user(model, user_id):
 
 
 
-# new BluePrint here for public
-# GET all users info 
-# GET user info by multiple filters 
-# 
+# -------------------PUBLIC ROUTE-------------------------------------
 
 public_bp = Blueprint("",__name__, url_prefix = "/")
 
@@ -192,20 +193,6 @@ def search_by_zip_code_and_tennis_level():
     return jsonify(response), 200
 
 
-    # if not args:
-    #     abort(make_response(
-    #                 {"message": f"invalid params"}, 400))
-    # argsdict = {}
-    # for k, v in args.items():
-    #     if validate_numeric_input(v):
-    #         argsdict[k] = v
-    # query = TennisUser.query.filter_by(**argsdict)
-
-    # for user in query:
-    #     response.append(user.to_dict())
-    # return jsonify(response), 200
-
-
 #-----query for list of zip codes:
 #tennis_level = 2
 #closest_zip_codes = [98029,98020]
@@ -213,26 +200,6 @@ def search_by_zip_code_and_tennis_level():
 # result = session.query(TennisUser).filter(TennisUser.zip_code.in_(closest_zip_codes),TennisUser.tennis_level.like(tennis_level) )
 # for row in result:
 #     response.append(row)
-
-
-###-------------code for the zip API:
-
-# session = db.session
-#    closest_zip_codes = [98008, 98074]
-#     tennis_level = 3
-
-#     #calling the API to populate the closest_zip_codes list:
-
-#     response = []
-
-#     result = session.query(TennisUser).filter(TennisUser.zip_code.in_(
-#         closest_zip_codes)).filter(TennisUser.tennis_level == tennis_level)
-
-#     for row in result:
-#         response.append(row.to_dict())
-
-#     return jsonify(response), 200
-
 
 ##____________________code that works without API:
 # response = []
