@@ -117,21 +117,74 @@ def validate_numeric_input(input):
             {"message": f"{input} invalid"}, 400))
 
 
+path = "https://api.zip-codes.com/ZipCodesAPI.svc/1.0/FindZipCodesInRadius"
+
+APIKEY = "HY8RUH44ZNYLNLLM5OX6"
+
+
+
+
+def create_params(zip_code):
+    query_params = {
+        "zipcode": zip_code,
+        "minimumradius": 0,
+        "maximumradius": 20,
+        "country": "ALL",
+        "key": APIKEY
+    }
+    return query_params
+
+
+def construct_request_for_zip_code(query_params):
+    response = requests.get(path, params=query_params)
+    response_body = response.json()
+    return response_body
+
+
+def get_list_of_zip_codes(zip_code):
+    query_params = create_params(zip_code)
+    response_body = construct_request_for_zip_code(query_params)
+    closest_zip_codes = []
+    list_of_cities = response_body['DataList']
+    for item in list_of_cities:
+        closest_zip_codes.append(item["Code"])
+    return closest_zip_codes
+
+
+# print(get_list_of_zip_codes(zip_code))
+
 @public_bp.route("", methods=["GET"])
 def search_by_zip_code_and_tennis_level():
     response = []
+    session = db.session
+    #hardcoded data for now:
+    # zip_code = 90210
+    tennis_level = None
+
+    #calling the API to populate the closest_zip_codes list:
+    closest_zip_codes = None
+
+    #taking args from request:
     args = request.args
     if not args:
             abort(make_response(
                 {"message": f"invalid params"}, 400))
-    argsdict = {}
+    
     for k, v in args.items():
-        if validate_numeric_input(v):
-            argsdict[k] = v
-    query = TennisUser.query.filter_by(**argsdict)
+        if k == "zip_code":
+            if validate_numeric_input(v):
+                closest_zip_codes = get_list_of_zip_codes(v)
+        elif k == "tennis_level":
+            if validate_numeric_input(v):
+                tennis_level = v
+        
 
-    for user in query:
-        response.append(user.to_dict())
+    result = session.query(TennisUser).filter(TennisUser.zip_code.in_(
+        closest_zip_codes)).filter(TennisUser.tennis_level == tennis_level)
+
+    for row in result:
+        response.append(row.to_dict())
+
     return jsonify(response), 200
 
     
@@ -174,4 +227,21 @@ def search_by_zip_code_and_tennis_level():
 #     for row in result:
 #         response.append(row.to_dict())
 
+#     return jsonify(response), 200
+
+
+##____________________code that works without API:
+# response = []
+#   args = request.args
+#    if not args:
+#           abort(make_response(
+#                {"message": f"invalid params"}, 400))
+#     argsdict = {}
+#     for k, v in args.items():
+#         if validate_numeric_input(v):
+#             argsdict[k] = v
+#     query = TennisUser.query.filter_by(**argsdict)
+
+#     for user in query:
+#         response.append(user.to_dict())
 #     return jsonify(response), 200
