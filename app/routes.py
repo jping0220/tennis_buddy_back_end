@@ -2,7 +2,6 @@ from flask import Blueprint, jsonify, request, make_response, abort
 from app import db
 from app.models.user import TennisUser
 # from datetime import datetime 
-from zip_api import get_list_of_zip_codes
 import requests
 import os
 
@@ -120,28 +119,19 @@ def validate_numeric_input(input):
 
 @public_bp.route("", methods=["GET"])
 def search_by_zip_code_and_tennis_level():
-    session = db.session
-    
-    tennis_level = 3
-    #taking params:
+    response = []
     args = request.args
     if not args:
-        abort(make_response(
-                    {"message": f"invalid params"}, 400))
-    
+            abort(make_response(
+                {"message": f"invalid params"}, 400))
+    argsdict = {}
     for k, v in args.items():
-        if k == "zip_code":
-            #calling the API to populate the closest_zip_codes list:
-            closest_zip_codes = get_list_of_zip_codes(k)
+        if validate_numeric_input(v):
+            argsdict[k] = v
+    query = TennisUser.query.filter_by(**argsdict)
 
-    response = []
-    
-    result = session.query(TennisUser).filter(TennisUser.zip_code.in_(
-        closest_zip_codes)).filter(TennisUser.tennis_level == tennis_level)
-    
-    for row in result:
-        response.append(row.to_dict())
-
+    for user in query:
+        response.append(user.to_dict())
     return jsonify(response), 200
 
     
@@ -168,18 +158,20 @@ def search_by_zip_code_and_tennis_level():
 #     response.append(row)
 
 
-###-------------code that functions perfectly:
-# response = []
-#   args = request.args
-#    if not args:
-#         abort(make_response(
-#             {"message": f"invalid params"}, 400))
-#     argsdict = {}
-#     for k, v in args.items():
-#         if validate_numeric_input(v):
-#             argsdict[k] = v
-#     query = TennisUser.query.filter_by(**argsdict)
+###-------------code for the zip API:
 
-#     for user in query:
-#         response.append(user.to_dict())
+# session = db.session
+#    closest_zip_codes = [98008, 98074]
+#     tennis_level = 3
+
+#     #calling the API to populate the closest_zip_codes list:
+
+#     response = []
+
+#     result = session.query(TennisUser).filter(TennisUser.zip_code.in_(
+#         closest_zip_codes)).filter(TennisUser.tennis_level == tennis_level)
+
+#     for row in result:
+#         response.append(row.to_dict())
+
 #     return jsonify(response), 200
