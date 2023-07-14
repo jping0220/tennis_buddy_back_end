@@ -159,8 +159,8 @@ def search_by_zip_code_and_tennis_level():
     tennis_level = None
 
     #calling the API to populate the closest_zip_codes list:
-    closest_zip_codes = None
-
+    closest_zip_codes = []
+    result = []
     #taking args from request:
     args = request.args
     if not args:
@@ -179,14 +179,14 @@ def search_by_zip_code_and_tennis_level():
                 result = session.query(TennisUser).filter(TennisUser.zip_code.in_(
                 closest_zip_codes)).filter(TennisUser.tennis_level == tennis_level)
 
-    elif tennis_level != None and closest_zip_codes == None:
+    elif tennis_level != None and not closest_zip_codes:
         result = session.query(TennisUser).filter(TennisUser.tennis_level == tennis_level)
     
     elif tennis_level == None and len(closest_zip_codes) > 0:
         result = session.query(TennisUser).filter(TennisUser.zip_code.in_(
         closest_zip_codes))
     
-
+    
     for row in result:
         response.append(row.to_dict())
 
