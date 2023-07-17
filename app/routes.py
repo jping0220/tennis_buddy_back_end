@@ -13,16 +13,33 @@ load_dotenv()
 
 
 user_bp = Blueprint("tennis_user",__name__, url_prefix = "/users")
-def getCurrentUserId():
-    return "laura1234"
-    # once JWT Bearer authentication is hooked up
-    #return request_security_token.sub
 
 
+#new route with auth 0
 # create a user
+#add this @require_auth(None)
 @user_bp.route("", methods=["POST"])
 def create_user():
     ''''User is able to list their information on the site'''
+
+    request_body = request.get_json()
+    new_user = TennisUser.from_dict(request_body)
+    new_user.token = current_token.sub
+
+
+    db.session.add(new_user)
+    db.session.commit()
+
+    return {"user": new_user.to_dict()}, 201
+
+
+#_____________________________________
+# create new user route (old route intact)
+@user_bp.route("", methods=["POST"])
+def create_user():
+    ''''User is able to list their information on the site'''
+
+    # Código orginal sin tocar:
     request_body = request.get_json()
     new_user = TennisUser.from_dict(request_body)
     #new_user.user_id = getCurrentUserId()
@@ -37,29 +54,79 @@ def create_user():
     return {"user":new_user.to_dict()}, 201
 
 
-# get all users 
-@user_bp.route("",methods=["GET"])
-def get_all_users():
-    response = []
-    all_users = TennisUser.query.all()
+# get all users - we won't use this route:
+# @user_bp.route("",methods=["GET"])
+# def get_all_users():
+#     response = []
+#     all_users = TennisUser.query.all()
 
-    for user in all_users:
-        response.append(user.to_dict())
+#     for user in all_users:
+#         response.append(user.to_dict())
 
-    return jsonify(response),200
+#     return jsonify(response),200
 
 
-# get one user info
+#New route with auth:
+#get user info
+#add decorator: @require_auth(None)
+@user_bp.route("", methods=["GET"])
+def get_one_user():
+    ''''User is able to see their information on the site'''
+    result = session.query(TennisUser).filter(
+        TennisUser.token == current_token.sub)
+    if result is None:
+        abort(make_response({"msg": "User not found"}, 404))
+    
+    return {"user": result.to_dict()}, 200
+
+
+#__________________________________
+# get one user info (old route leave intact)
 @user_bp.route("<user_id>", methods = ["GET"])
 def get_one_user(user_id):
     ''''User is able to see their information on the site'''
     user = validate_user(TennisUser,user_id)
     return {"user":user.to_dict()}, 200
+#________________________________________
 
 
-# update user 
+
+#new route with auth:
+#update user info:
+#add decorator: @require_auth(None)
+@user_bp.route("", methods=["PATCH"])
+def update_user(user_id):
+    ''''User is able to modify their information on the site'''
+    #get the user:
+    result = session.query(TennisUser).filter(
+        TennisUser.token == current_token.sub)
+    if result is None:
+        abort(make_response({"msg": "User not found"}, 404))
+    
+    #get new info:
+    request_data = request.get_json()
+
+    # update_user = request_data
+    if request_data.get("preferences"):
+        result.preferences = request_data["preferences"]
+    if request_data.get("name"):
+        result.name = request_data["name"]
+    if request_data.get("tennis_level"):
+        result.tennis_level = request_data["tennis_level"]
+    if request_data.get("zip_code"):
+        result.zip_code = request_data["zip_code"]
+    if request_data.get("email"):
+        result.email = request_data["email"]
+
+    db.session.commit()
+
+    return {"user": result.to_dict()}, 200
+
+#___________________________________
+# update user (old route intact)
 @user_bp.route("/<user_id>", methods = ["PATCH"])
 def update_user(user_id):
+    ''''User is able to modify their information on the site'''
     user = validate_user(TennisUser,user_id)
     request_data = request.get_json()
 
@@ -79,18 +146,38 @@ def update_user(user_id):
     db.session.commit()
 
     return {"user":user.to_dict()}, 200
+#_____________________________________________
 
 
-# delete user
+
+#new route
+#add decorator: @require_auth(None)
+@user_bp.route("/<user_id>", methods=["DELETE"])
+def delete_user(user_id):
+    '''User can delete their profile'''
+    result = session.query(TennisUser).filter(
+        TennisUser.token == current_token.sub)
+    if result is None:
+        abort(make_response({"msg": "User not found"}, 404))
+
+    db.session.delete(result)
+    db.session.commit()
+
+    return {"details": f'User {user_id} deleted successfully!'}
+
+
+#___________________________________________
+# delete user (old route intact)
 @user_bp.route("/<user_id>", methods = ["DELETE"])
 def delete_user(user_id):
+    '''User can delete their profile'''
     user = validate_user(TennisUser, user_id)
 
     db.session.delete(user)
     db.session.commit()
 
     return {"details": f'User {user_id} deleted successfully!'}
-
+#_____________________________________________________
 
 # helper funtion (validate_user)
 def validate_user(model, user_id):
@@ -103,6 +190,9 @@ def validate_user(model, user_id):
     if user is None:
         abort(make_response({"msg": "User not found"}, 404))
     return user 
+
+
+    
 
 
 
