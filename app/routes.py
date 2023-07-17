@@ -18,7 +18,7 @@ user_bp = Blueprint("tennis_user",__name__, url_prefix = "/users")
 #new route with auth 0
 # create a user
 #add this @require_auth(None)
-@user_bp.route("", methods=["POST"])
+#@user_bp.route("", methods=["POST"])
 def create_user():
     ''''User is able to list their information on the site'''
 
@@ -42,7 +42,6 @@ def create_user():
     # Código orginal sin tocar:
     request_body = request.get_json()
     new_user = TennisUser.from_dict(request_body)
-    #new_user.user_id = getCurrentUserId()
 
     print(new_user.tennis_level)
 
@@ -69,7 +68,7 @@ def create_user():
 #New route with auth:
 #get user info
 #add decorator: @require_auth(None)
-@user_bp.route("", methods=["GET"])
+#@user_bp.route("", methods=["GET"])
 def get_one_user():
     ''''User is able to see their information on the site'''
     result = session.query(TennisUser).filter(
@@ -94,7 +93,7 @@ def get_one_user(user_id):
 #new route with auth:
 #update user info:
 #add decorator: @require_auth(None)
-@user_bp.route("", methods=["PATCH"])
+#@user_bp.route("", methods=["PATCH"])
 def update_user(user_id):
     ''''User is able to modify their information on the site'''
     #get the user:
@@ -152,7 +151,7 @@ def update_user(user_id):
 
 #new route
 #add decorator: @require_auth(None)
-@user_bp.route("/<user_id>", methods=["DELETE"])
+#S@user_bp.route("/<user_id>", methods=["DELETE"])
 def delete_user(user_id):
     '''User can delete their profile'''
     result = session.query(TennisUser).filter(
