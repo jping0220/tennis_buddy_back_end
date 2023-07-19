@@ -152,7 +152,7 @@ def update_user(user_id):
 #new route
 #add decorator: @require_auth(None)
 #S@user_bp.route("/<user_id>", methods=["DELETE"])
-def delete_user(user_id):
+def delete_user():
     '''User can delete their profile'''
     result = session.query(TennisUser).filter(
         TennisUser.token == current_token.sub)
@@ -162,8 +162,7 @@ def delete_user(user_id):
     db.session.delete(result)
     db.session.commit()
 
-    return {"details": f'User {user_id} deleted successfully!'}
-
+    return {"details": f'User {current_token.sub} deleted successfully!'}
 
 #___________________________________________
 # delete user (old route intact)
