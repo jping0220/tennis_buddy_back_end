@@ -197,7 +197,7 @@ def validate_user(model, user_id):
 
 # -------------------PUBLIC ROUTE-------------------------------------
 
-public_bp = Blueprint("",__name__, url_prefix = "/")
+public_bp = Blueprint("",__name__, url_prefix = "/search")
 
 
 def validate_numeric_input(input):

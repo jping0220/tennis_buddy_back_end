@@ -1,8 +1,8 @@
 from app import db
 
 class TennisUser(db.Model):
-    user_id = db.Column(db.Integer, primary_key=True, autoincrement = True)
-    token = db.Column(db.String)
+    tennis_user_id = db.Column(db.Integer, primary_key=True, autoincrement = True)
+    auth_user_id = db.Column(db.String)
     name = db.Column(db.String, nullable=False)
     email = db.Column(db.String, nullable=False)
     zip_code = db.Column(db.Integer, nullable=False)
@@ -11,14 +11,14 @@ class TennisUser(db.Model):
 
     def to_dict(self):
         return {
-                "id":self.user_id,
+            "tennis_user_id": self.tennis_user_id,
                 "name":self.name,
                 "email":self.email,
                 "zip_code":self.zip_code,
                 "tennis_level":self.tennis_level,
                 "preferences":self.preferences
-                
                 }
+    
     @classmethod
     def from_dict(cls,user_data):
         return cls(
