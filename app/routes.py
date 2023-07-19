@@ -14,6 +14,8 @@ load_dotenv()
 
 user_bp = Blueprint("tennis_user",__name__, url_prefix = "/users")
 
+def get_authenticated_user_id():
+    return current_token.sub
 
 #new route with auth 0
 # create a user
@@ -24,7 +26,7 @@ def create_user():
 
     request_body = request.get_json()
     new_user = TennisUser.from_dict(request_body)
-    new_user.token = current_token.sub
+    new_user.auth_user_id = get_authenticated_user_id()
 
 
     db.session.add(new_user)
@@ -71,8 +73,10 @@ def create_user():
 #@user_bp.route("", methods=["GET"])
 def get_one_user():
     ''''User is able to see their information on the site'''
+    session = db.session
+    auth_user_id = get_authenticated_user_id()
     result = session.query(TennisUser).filter(
-        TennisUser.token == current_token.sub)
+        TennisUser.auth_user_id == auth_user_id)
     if result is None:
         abort(make_response({"msg": "User not found"}, 404))
     
@@ -94,12 +98,14 @@ def get_one_user(user_id):
 #update user info:
 #add decorator: @require_auth(None)
 #@user_bp.route("", methods=["PATCH"])
-def update_user(user_id):
+def update_user():
     ''''User is able to modify their information on the site'''
+    session = db.session
+    auth_user_id = get_authenticated_user_id()
     #get the user:
-    result = session.query(TennisUser).filter(
-        TennisUser.token == current_token.sub)
-    if result is None:
+    existing_user = session.query(TennisUser).filter(
+        TennisUser.auth_user_id == auth_user_id)
+    if existing_user is None:
         abort(make_response({"msg": "User not found"}, 404))
     
     #get new info:
@@ -107,19 +113,19 @@ def update_user(user_id):
 
     # update_user = request_data
     if request_data.get("preferences"):
-        result.preferences = request_data["preferences"]
+        existing_user.preferences = request_data["preferences"]
     if request_data.get("name"):
-        result.name = request_data["name"]
+        existing_user.name = request_data["name"]
     if request_data.get("tennis_level"):
-        result.tennis_level = request_data["tennis_level"]
+        existing_user.tennis_level = request_data["tennis_level"]
     if request_data.get("zip_code"):
-        result.zip_code = request_data["zip_code"]
+        existing_user.zip_code = request_data["zip_code"]
     if request_data.get("email"):
-        result.email = request_data["email"]
+        existing_user.email = request_data["email"]
 
     db.session.commit()
 
-    return {"user": result.to_dict()}, 200
+    return {"user": existing_user.to_dict()}, 200
 
 #___________________________________
 # update user (old route intact)
@@ -151,18 +157,20 @@ def update_user(user_id):
 
 #new route
 #add decorator: @require_auth(None)
-#S@user_bp.route("/<user_id>", methods=["DELETE"])
+#S@user_bp.route("/users/me", methods=["DELETE"])
 def delete_user():
     '''User can delete their profile'''
+    session = db.session
+    auth_user_id = get_authenticated_user_id()
     result = session.query(TennisUser).filter(
-        TennisUser.token == current_token.sub)
+        TennisUser.auth_user_id == auth_user_id)
     if result is None:
         abort(make_response({"msg": "User not found"}, 404))
 
     db.session.delete(result)
     db.session.commit()
 
-    return {"details": f'User {current_token.sub} deleted successfully!'}
+    return {"details": f'User {auth_user_id} deleted successfully!'}
 
 #___________________________________________
 # delete user (old route intact)
