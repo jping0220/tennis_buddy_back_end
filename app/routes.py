@@ -11,7 +11,7 @@ load_dotenv()
 
 #-----------------------PROTECTED ROUTES ---------------------------
 
-
+#For auth0 change this route to "users/me"
 user_bp = Blueprint("tennis_user",__name__, url_prefix = "/users")
 
 def get_authenticated_user_id():
