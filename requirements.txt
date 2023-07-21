@@ -1,5 +1,4 @@
 Authlib
-flask
 alembic==1.5.4
 attrs==21.2.0
 autopep8==1.5.5
