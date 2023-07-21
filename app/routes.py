@@ -58,12 +58,12 @@ def get_one_user():
     auth_user_id = get_authenticated_user_id()
     
     result = session.query(TennisUser).filter(
-        TennisUser.auth_user_id == auth_user_id)
+        TennisUser.auth_user_id == auth_user_id).first()
     
-    if result is None:
+    if not result:
         abort(make_response({"msg": "User not found"}, 404))
 
-    return {"user": result[0].to_dict()}, 200
+    return {"user": result.to_dict()}, 200
 
 #update user info:
 @user_bp.route("", methods=["PATCH"])
@@ -74,8 +74,8 @@ def update_user():
     auth_user_id = get_authenticated_user_id()
     #get the user:
     existing_user = session.query(TennisUser).filter(
-        TennisUser.auth_user_id == auth_user_id)
-    print(f"existing user: {existing_user[0].name}")
+        TennisUser.auth_user_id == auth_user_id).first()
+    
     if existing_user is None:
         abort(make_response({"msg": "User not found"}, 404))
 
@@ -85,20 +85,20 @@ def update_user():
 
     
     if request_data.get("preferences"):
-        existing_user[0].preferences = request_data["preferences"]
+        existing_user.preferences = request_data["preferences"]
     if request_data.get("name"):
-        existing_user[0].name = request_data["name"]
+        existing_user.name = request_data["name"]
     if request_data.get("tennis_level"):
-        existing_user[0].tennis_level = request_data["tennis_level"]
+        existing_user.tennis_level = request_data["tennis_level"]
     if request_data.get("zip_code"):
-        existing_user[0].zip_code = request_data["zip_code"]
+        existing_user.zip_code = request_data["zip_code"]
     if request_data.get("email"):
-        existing_user[0].email = request_data["email"]
+        existing_user.email = request_data["email"]
 
-    print(f"second {existing_user[0].name}")
+    print(f"second {existing_user.name}")
     db.session.commit()
 
-    return {"user": existing_user[0].to_dict()}, 200
+    return {"user": existing_user.to_dict()}, 200
 
 #delete user
 @user_bp.route("", methods=["DELETE"])
@@ -109,7 +109,7 @@ def delete_user():
     auth_user_id = get_authenticated_user_id()
     print(auth_user_id)
     result = session.query(TennisUser).filter(
-        TennisUser.auth_user_id == auth_user_id)
+        TennisUser.auth_user_id == auth_user_id).first()
     if result is None:
         abort(make_response({"msg": "User not found"}, 404))
 
