@@ -35,19 +35,24 @@ def get_authenticated_user_id():
 @require_auth(None)
 def create_user():
     ''''User is able to list their information on the site'''
+    #Checking if user already has a profile:
+    session = db.session
+    auth_user_id = get_authenticated_user_id()
+    result = session.query(TennisUser).filter(
+        TennisUser.auth_user_id == auth_user_id).first()
+    if not result:
+        request_body = request.get_json()
+        print(request_body)
+        new_user = TennisUser.from_dict(request_body)
+        new_user.auth_user_id = get_authenticated_user_id()
+        print(new_user.auth_user_id)
 
-    request_body = request.get_json()
-    print(request_body)
-    new_user = TennisUser.from_dict(request_body)
-    new_user.auth_user_id = get_authenticated_user_id()
-    print(new_user.auth_user_id)
+        db.session.add(new_user)
+        db.session.commit()
 
-
-    db.session.add(new_user)
-    db.session.commit()
-
-    return {"user": new_user.to_dict()}, 201
-
+        return {"user": new_user.to_dict()}, 201
+    
+    abort(make_response({"msg": "User profile already exists"}, 409))
 
 #get user info
 @user_bp.route("", methods=["GET"])
