@@ -118,7 +118,7 @@ def delete_user():
     if result is None:
         abort(make_response({"msg": "User not found"}, 404))
 
-    db.session.delete(result[0])
+    db.session.delete(result)
     db.session.commit()
 
     return {"details": f'User {auth_user_id} deleted successfully!'}
