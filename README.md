@@ -6,14 +6,17 @@ The Tennis Buddy API provides endpoints to handle user registration, profile man
 
 ## Getting Started:
 Clone this repository:
-git clone tatatatata
-
+```
+git clone https://github.com/jping0220/tennis_buddy_back_end
+```
 Activate virtual env:
+```
 $ source env/bin/activate
-
+```
 Install dependencies:
+```
 pip3 install -r requirements.txt
-
+```
 ## API Documentation
 Authenticated routes:
 POST /users/me
