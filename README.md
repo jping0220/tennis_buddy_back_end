@@ -20,7 +20,7 @@ POST /users/me
 Description: Register a new user.
 Authentication: Bearer token (JWT) required in the Authorization header.
 Request Body:
-
+```
 {
   "name": "John Doe",
   "email": "john@example.com",
@@ -28,9 +28,10 @@ Request Body:
   "tennis_level": 4.5,
   "preferences" : "Play during the morning"
 }
-
+```
 Response:
 json
+```
   {
   "user": 
   {"name": "John Doe",
@@ -39,13 +40,14 @@ json
   "tennis_level": 4.5,
   "preferences" : "Play during the morning"}
   }
+```
 
 GET /users/me:
 Description: Get the user profile.
 Authentication: Bearer token (JWT) required in the Authorization header.
 Response:
 json
-
+```
 {
   "user": 
   {"name": "John Doe",
@@ -54,18 +56,19 @@ json
   "tennis_level": 4.5,
   "preferences" : "Play during the morning"}
 }
-
+```
 PATCH /users/me
 Description: Update the user profile.
 Authentication: Bearer token (JWT) required in the Authorization header.
 Request Body:
+```
 {
   "name": "John Doe"
 }
-
+```
 Response:
 json
-
+```
 {
   "user": 
   {"name": "John Doe",
@@ -74,25 +77,27 @@ json
   "tennis_level": 4.5,
   "preferences" : "Play during the morning"}
 }
-
+```
 DELETE /users/me
 Description: Delete the user profile.
 Authentication: Bearer token (JWT) required in the Authorization header.
 Response:
+```
 {"details": f'User {auth_user_id} deleted successfully!'}
-
+```
 Public route:
 GET /search
 Description: Get list of registered users.
 Request body:
 json
-
+```
 {
   "zip_code": 98029,
   "tennis_level": 4.5,
 }
-
+```
 Response: 
+```
 [
   {"name": "John Doe",
   "email": "john@example.com",
@@ -100,7 +105,7 @@ Response:
   "tennis_level": 4.5,
   "preferences" : "Play during the morning"}
 ]
-
+```
 ## Database Schema
 
 Tennis Buddy uses SQL database (Postgres). Schema:
