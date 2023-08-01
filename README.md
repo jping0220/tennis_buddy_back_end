@@ -19,10 +19,10 @@ pip3 install -r requirements.txt
 ```
 ## API Documentation
 Authenticated routes:
-POST /users/me
-Description: Register a new user.
-Authentication: Bearer token (JWT) required in the Authorization header.
-Request Body:
+* POST /users/me
+* Description: Register a new user.
+* Authentication: Bearer token (JWT) required in the Authorization header.
+* Request Body:
 ```
 {
   "name": "John Doe",
@@ -32,7 +32,7 @@ Request Body:
   "preferences" : "Play during the morning"
 }
 ```
-Response:
+* Response:
 json
 ```
   {
@@ -45,10 +45,10 @@ json
   }
 ```
 
-GET /users/me:
-Description: Get the user profile.
-Authentication: Bearer token (JWT) required in the Authorization header.
-Response:
+* GET /users/me:
+* Description: Get the user profile.
+* Authentication: Bearer token (JWT) required in the Authorization header.
+* Response:
 json
 ```
 {
@@ -60,16 +60,16 @@ json
   "preferences" : "Play during the morning"}
 }
 ```
-PATCH /users/me
-Description: Update the user profile.
-Authentication: Bearer token (JWT) required in the Authorization header.
-Request Body:
+* PATCH /users/me
+* Description: Update the user profile.
+* Authentication: Bearer token (JWT) required in the Authorization header.
+* Request Body:
 ```
 {
   "name": "John Doe"
 }
 ```
-Response:
+* Response:
 json
 ```
 {
@@ -81,17 +81,17 @@ json
   "preferences" : "Play during the morning"}
 }
 ```
-DELETE /users/me
-Description: Delete the user profile.
-Authentication: Bearer token (JWT) required in the Authorization header.
-Response:
+* DELETE /users/me
+* Description: Delete the user profile.
+* Authentication: Bearer token (JWT) required in the Authorization header.
+* Response:
 ```
 {"details": f'User {auth_user_id} deleted successfully!'}
 ```
 Public route:
-GET /search
-Description: Get list of registered users.
-Request body:
+* GET /search
+* Description: Get list of registered users.
+* Request body:
 json
 ```
 {
@@ -99,7 +99,7 @@ json
   "tennis_level": 4.5,
 }
 ```
-Response: 
+* Response: 
 ```
 [
   {"name": "John Doe",
