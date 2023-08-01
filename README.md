@@ -126,3 +126,7 @@ The API uses JWT for authentication. Users obtain a JWT after successful login, 
 
 ## Deployment
 Render - Postgres database on Render. 
+
+## Credits
+Team members: 
+Jiaping Chen / Laura Perez
