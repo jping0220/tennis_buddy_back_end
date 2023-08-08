@@ -126,6 +126,13 @@ Tennis Buddy uses SQL database (Postgres). Schema:
     tennis_level = db.Column(db.Float)
     preferences = db.Column(db.String(300))
 
+## API for Zip Code Search
+```
+https://api.zip-codes.com/ZipCodesAPI.svc/1.0/FindZipCodesInRadius
+
+```
+This API is a zip code radius finder that returns a list of zip codes within a selected area(20 miles).
+
 ## Authentication and Authorization
 The API uses JWT for authentication. Users obtain a JWT after successful login, which they need to include in the Authorization header for authenticated endpoints.
 
